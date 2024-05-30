@@ -5,6 +5,7 @@ import UIKit
 
 var _isCrop = true
 var _isPreview = true
+var _minSelectedAssets: Int? = nil
 
 extension TLPhotosPickerConfigure {
     var isPreview: Bool {
@@ -18,6 +19,13 @@ extension TLPhotosPickerConfigure {
         get { return _isCrop }
         set {
             _isCrop = newValue
+        }
+    }
+
+    var minSelectedAssets: Int? {
+        get { return _minSelectedAssets }
+        set {
+            _minSelectedAssets = newValue
         }
     }
 }
@@ -175,6 +183,7 @@ class MultipleImagePicker: NSObject, UINavigationControllerDelegate {
         config.muteAudio = self.options["muteAudio"] as! Bool
         config.singleSelectedMode = (self.options["singleSelectedMode"])! as! Bool
         config.maxSelectedAssets = self.options["maxSelectedAssets"] as? Int
+        config.minSelectedAssets = self.options["minSelectedAssets"] as? Int
         config.selectedColor = UIColor(hex: self.options["selectedColor"] as! String)
         
         config.isPreview = self.options["isPreview"] as? Bool ?? false
@@ -364,6 +373,15 @@ extension MultipleImagePicker: TLPhotosPickerViewControllerDelegate {
         if withTLPHAssets.count == 0 {
             self.resolve([])
             self.dismissComplete()
+            return
+        }
+
+        // check if the minimum selection requirement is met:
+        if withTLPHAssets.count < config.minSelectedAssets ?? 0  {
+            let alert = UIAlertController(title: "Selection Alert", message: "You must select at least \(config.minSelectedAssets ?? 0) photos", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            // handle controller
+            self.getTopMostViewController()?.present(alert, animated: true, completion: nil)
             return
         }
         
