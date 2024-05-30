@@ -60,8 +60,8 @@ export type Options<T extends MediaType = MediaType.ALL> = {
   muteAudio?: boolean;
   preventAutomaticLimitedAccessAlert?: boolean; // newest iOS 14
   numberOfColumn?: number;
-  maxSelectedAssets?: number;
-  minSelectedAssets?: number;
+  maxSelectedAssets: number;
+  minSelectedAssets: number;
   fetchOption?: Object;
   fetchCollectionOption?: Object;
   maximumMessageTitle?: string;
